@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 700px;
+    margin: 0 auto;
+}      
+.quadro  {              
+    width: 105px;
+    height: 139px;
+    border: 1px solid black;
+    text-align: center;
+    position: relative; 
+}
+.cartaFrente img, 
+.cartaCostas img {
+    width: 100px;
+    height: 134px;           
+}
+/* define a velocidade da transição */
+.cartas {  	
+    transition: 0.6s;  	
+    transform-style: preserve-3d;    
+    display: flex;
+    justify-content: center;
+}                
+/* esconde o verso durante a animação */
+.cartaFrente, .cartaCostas {  	
+    backFace-visibility: hidden;      
+    position: absolute;  
+}   
+/* posiciona na frente */
+.nafrente { z-index: 1;  }  
+/* efetua a rotação */
+.rotaciona{  		
+    transform: rotateY(180deg);  	
+}    

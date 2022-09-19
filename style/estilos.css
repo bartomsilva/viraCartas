@@ -24,6 +24,9 @@
     display: flex;
     justify-content: center;
 }                
+.cartas:hover {  	
+    cursor: pointer;
+}                
 /* esconde o verso durante a animação */
 .cartaFrente, .cartaCostas {  	
     backFace-visibility: hidden;      

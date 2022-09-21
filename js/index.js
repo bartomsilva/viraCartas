@@ -1,22 +1,28 @@
 const numeroImagens=12
-var cliques=0  
+var numerodeCliques=0 // total de clique
+var tempoDecorrido='' // tempo para concluir o desafio
+var horaInicial=''
+var horaFinal=''
+var cliques=0 // controde do par 
 var livre=true // credito a meu filho pedro que descobriu o bug 
                // que permitia clicar em outra carta enquanto as
-               // cartas que não foram as certas estavão ainda virando.               
+               // cartas que não foram as certas estavão ainda virando.  
+                           
 var jogadaAnterior='' // evita o click na mesma imagem duas vezes
 var jogadasF=['','','']             
 var jogadasC=['','','']     
 
+////////////
 function misturaFotos(arrFotos) {
 
-for (let i = arrFotos.length - 1; i > 0; i--) {        
-    const j = Math.floor(Math.random() * (i + 1));
-    // Reposicionando elemento
-    [arrFotos[i], arrFotos[j]] = [arrFotos[j], arrFotos[i]];
-}
+    for (let i = arrFotos.length - 1; i > 0; i--) {     
+        const j = Math.floor(Math.random() * (i + 1));
+        [arrFotos[i], arrFotos[j]] = [arrFotos[j], arrFotos[i]]
+    }
 return arrFotos;
 }
     
+//////////////
 const buscaImagens=()=>{
     const arrRetorno=[]  
     var nImagem=''  
@@ -31,10 +37,13 @@ const buscaImagens=()=>{
     return misturaFotos(arrRetorno)
 }
 ////////        
-function efeito(jogada) {
+const efeito=(jogada) => {
     if (!livre) return
+    numerodeCliques++
 
-    const posicao = jogada.getAttribute("data-pos")
+    //const posicao = jogada.getAttribute("data-pos")
+    const posicao = jogada.getAttribute("id")
+    console.log(jogada)
 
     // contendo C = costa - F = frente
     const carta = posicao.split("",3)
@@ -60,9 +69,9 @@ function efeito(jogada) {
         jogadaAnterior=''
         checaAcerto(jogadasF,jogadasC)
     }            
-    }               
+}               
 /////////
-function checaAcerto(jogadasF,jogadasC){
+const checaAcerto=(jogadasF,jogadasC) => {    
     
     livre=false
 
@@ -76,14 +85,8 @@ function checaAcerto(jogadasF,jogadasC){
             livre=true
         },500) 
     }           
-    // gira as cartas jogadas certas ou erradas (par)
-    
-    //removerosclicks() // implementar
-    
     rotacionar(jogadasF,jogadasC)    
 }
-
-///////   
 const rotacionar=(jogadasF,jogadasC)=>
 {
     setTimeout(() => {    
@@ -97,56 +100,55 @@ const rotacionar=(jogadasF,jogadasC)=>
         jogadasF[2].classList.toggle('nafrente')     
         livre=true           
     },500)  
-
 }
-
-ind=0 // numerador dos quadros ( que guarda o par de imagens )
-////////
-
 const aImagens = buscaImagens()
 
-function carregaImagens() { 
+const carregaImagens=() => { 
     for(var i = 0; i < numeroImagens*2; i++){
-        ind++
         let novaimg                    
         let novaDiv = document.createElement("div");
-        let $quadro='quadro'+ind
+        let $quadro='quadro'+i
         novaDiv.setAttribute('class','quadro '+$quadro)   
         document.querySelector('.container').appendChild(novaDiv)
                         
         //frente
         novaDiv = document.createElement('div') 
         novaDiv.setAttribute('class','cartas cartaFrente rotaciona')
-        novaDiv.setAttribute('id','F'+ind)
-        novaDiv.setAttribute('DATA-POS','F'+ind)
+        novaDiv.setAttribute('id','F'+i)
         novaDiv.setAttribute('onclick','efeito(this)')                    
         document.querySelector('.'+$quadro).appendChild(novaDiv)
 
         novaimg = document.createElement("img");
         novaimg.setAttribute('src',aImagens[i])
-        document.querySelector("#F"+ind).appendChild(novaimg)
+        document.querySelector("#F"+i).appendChild(novaimg)
 
         // costas                    
         novaDiv = document.createElement('div') 
         novaDiv.setAttribute('class','cartas cartaCostas nafrente')
-        novaDiv.setAttribute('id','C'+ind)
-        novaDiv.setAttribute('DATA-POS','C'+ind)
+        novaDiv.setAttribute('id','C'+i)
         novaDiv.setAttribute('onclick','efeito(this)')
         document.querySelector('.'+$quadro).appendChild(novaDiv)
 
         novaimg = document.createElement("img");
         novaimg.setAttribute('src',"./img/costas.png")
-        document.querySelector("#C"+ind).appendChild(novaimg)
+        document.querySelector("#C"+i).appendChild(novaimg)
     }
 }            
 
+// em desenvolvimento
 const start=()=> {
-    // deverá iniciar as cartas viradas todas para frente durante 
-    // o tempo determinado em tepodeMemorizacao    
+    numerodeCliques=0
+    tempoDecorrido=''
+    horaInicial = new Date()        
 }
 
-
-
-
+const placar=()=>{
     
-    
+    horaFinal= new Date()
+    const diferenca = new Date( horaFinal - horaInicial )
+    var resultado =  diferenca.getUTCHours() + "h "
+    resultado += diferenca.getUTCMinutes() + "m "
+    resultado += diferenca.getUTCSeconds() + "s "
+    var docu = document.querySelector('#numerodeCliques')
+    docu.innerHTML=numerodeCliques
+}   
